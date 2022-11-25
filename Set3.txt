@@ -1,0 +1,97 @@
+101. select distinct username, activity, startDate, endDate
+from
+    (select u.*,
+           rank() over (partition by username order by startDate desc) as rnk,
+           count(activity) over (partition by username) as num
+    from UserActivity u) t
+where (num <> 1 and rnk = 2) or (num = 1 and rnk = 1)
+
+102. select distinct username, activity, startDate, endDate
+from
+    (select u.*,
+           rank() over (partition by username order by startDate desc) as rnk,
+           count(activity) over (partition by username) as num
+    from UserActivity u) t
+where (num <> 1 and rnk = 2) or (num = 1 and rnk = 1)
+
+103. select name from students where marks > 75 order by right(name,3) asc, id asc;
+
+104. SELECT name FROM Employee ORDER BY name;
+
+105. 
+
+106. select case
+            when a+b>c and a=b and b=c and a=c then 'Equilateral'
+            when a+b>c and (a=b or b=c or a=c) then 'Isosceles'
+            when a+b>c and a<>b and b<>c and a<>c then 'Scalene'
+            else 'Not A Triangle'
+        end
+        from triangles;
+
+107. select ceil(avg(salary) - avg(replace(salary, '0', ''))) from employees;
+
+108. select salary*months, count(employee_id) from employee group by salary*months order by salary*months desc limit 1;
+
+109. select concat(name,'(',upper(substring(occupation,1,1)),')') from occupations
+order by name;
+
+select concat("There are a total of",' ',count(occupation),' ',lower(occupation),'s',".")  from occupations
+group by occupation
+order by count(occupation) asc;
+
+110. SELECT Doctor, Professor, Singer, Actor FROM (
+SELECT ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name) as rn, name, occupation FROM       occupations) 
+PIVOT 
+(MAX(name) FOR occupation IN ('Doctor' as Doctor,'Professor' as Professor, 'Singer' as Singer, 'Actor' as Actor)) 
+ORDER BY rn;
+
+111. select n,case
+        when p is NULL then 'Root'
+        when n in (select p from bst) then 'Inner'
+        else 'Leaf'
+        end
+        from bst order by n;
+
+112. select comp.company_code, comp.founder,
+    count(distinct lm.lead_manager_code),
+    count(distinct sm.senior_manager_code),
+    count(distinct m.manager_code),
+    count(distinct emp.employee_code)
+from company comp 
+inner join lead_manager lm on comp.company_code= lm.company_code 
+inner join senior_manager sm on lm.lead_manager_code = sm.lead_manager_code
+inner join manager m on sm.senior_manager_code=m.senior_manager_code
+inner join employee emp on m.manager_code=emp.manager_code
+group by comp.company_code, comp.founder
+order by comp.company_code;
+
+113.
+114.
+115.
+116. SELECT DISTINCT f1.x,f1.y 
+FROM   functions f1 
+       inner join functions f2 
+               ON f1.x IN f2.y 
+                  AND f1.y IN f2.x 
+WHERE  f1.x < f1.y 
+        OR f1.x IN (SELECT x 
+                   FROM   functions 
+                   WHERE  x = y 
+                   GROUP  BY x,y 
+                   HAVING Count(*) > 1) 
+ORDER  BY f1.x; 
+
+117. select name from students where marks > 75 order by right(name,3) asc, id asc;
+
+118. SELECT name FROM Employee ORDER BY name;
+
+119. SELECT name FROM Employee WHERE salary > 2000 AND months < 10 ORDER BY employee_id;
+
+120. select case
+            when a+b>c and a=b and b=c and a=c then 'Equilateral'
+            when a+b>c and (a=b or b=c or a=c) then 'Isosceles'
+            when a+b>c and a<>b and b<>c and a<>c then 'Scalene'
+            else 'Not A Triangle'
+        end
+        from triangles;
+
